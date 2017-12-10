@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd">
+		<!-- 加载配置文件 -->
+		<context:property-placeholder location="classpath:db.properties"/>
+		
+		<!-- 数据库连接池 -->
+		<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driver}"></property>
+		<property name="jdbcUrl" value="${jdbc.url}"></property>
+		<property name="user" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		</bean>
+		
+		
+		<!-- 配置sqlSessionFactory  在整合包下-->
+		<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 加载mybatis的配置文件 -->
+		<property name="configLocation" value="classpath:mybatis/SqlMapConfig.xml"></property>
+		<property name="dataSource" ref="dataSource"></property>
+		
+		</bean>
+		
+		
+		<!-- 批量生产代理对象 加载多包用逗号隔开 生成的mapper的bean的id是mapper类名的
+		注意：是首字母小写！！！
+		规则也要遵循，同包、同名。自动加载配置文件
+		这样在mybatis的配置文件里就不用加载文件
+		
+		Spring 管理Mapper接口
+		 -->
+		<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+			<property name="basePackage" value="cn.itcast.ssm.mapper"></property>
+			<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+		</bean>
+
+</beans>

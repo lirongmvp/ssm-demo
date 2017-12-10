@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itcast.ssm.mapper.UserMapper">
+	<sql id="where_username">
+		<if test="userExtend!=null">
+			<if test="userExtend.username!=null and userExtend.username!=''">
+			t_user.username like '%${userExtend.username}%'
+			</if>
+		</if>
+	</sql>
+
+	<select id="findUserById" parameterType="int"
+		resultType="cn.itcast.ssm.pojo.User">
+		select * from t_user where uiid=#{id}
+	</select>
+
+
+	<select id="findUserList" parameterType="cn.itcast.ssm.uservo.UserVo"
+		resultType="cn.itcast.ssm.uservo.UserExtend">
+		select * from t_user
+		<where>
+		<include refid="where_username"></include>		
+		</where>
+	</select>
+
+	<!-- <insert id="saveUser" parameterType="cn.itcast.ssm.po.User"> insert 
+		into t_user values(#{uiid},#{username},#{password}) </insert> <delete id="deleteByName" 
+		parameterType="cn.itcast.ssm.po.User"> delete from t_user where username=#{username} 
+		</delete> <update id="updateById" parameterType="cn.itcast.ssm.po.User"> 
+		update t_user set username=#{username} where uiid=#{uiid} </update> -->
+
+
+</mapper>
+
